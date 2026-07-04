@@ -1,0 +1,21 @@
+name: Release Please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      # main へのマージ内容から次バージョンを判定し、リリース用PRを自動作成/更新する。
+      # そのPRがマージされると、タグ付けとGitHub Releaseの公開まで自動で行われる。
+      - uses: googleapis/release-please-action@v4
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
