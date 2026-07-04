@@ -1,0 +1,29 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: リポジトリをチェックアウト
+        uses: actions/checkout@v4
+        with:
+          # リリースノート生成のために全履歴を取得
+          fetch-depth: 0
+
+      - name: GitHub Releaseを作成
+        uses: softprops/action-gh-release@v2
+        with:
+          # タグ名（例: v1.2.3）をリリース名に使用
+          name: ${{ github.ref_name }}
+          # マージされたPRやコミットからリリースノートを自動生成
+          generate_release_notes: true
+          # プレリリース版タグ（例: v1.0.0-rc.1）は prerelease として公開
+          prerelease: ${{ contains(github.ref_name, '-') }}
