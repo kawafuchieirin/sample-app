@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.0](https://github.com/kawafuchieirin/sample-app/compare/v1.0.0...v1.1.0) (2026-07-04)
+
+
+### Features
+
+* GitHub OIDC デプロイ用の Terraform ブートストラップを追加 ([b1856cf](https://github.com/kawafuchieirin/sample-app/commit/b1856cfd4a759cddfd9a119ff7e643958e04fb6a))
+* GitHub OIDC デプロイ用の Terraform ブートストラップを追加 ([f1ec6fe](https://github.com/kawafuchieirin/sample-app/commit/f1ec6fe1f30f69b122c21451307ac4b201292b24))
+* タスク管理アプリ(React+Lambda+DynamoDB)をTerraform/CI-CD付きで追加 ([70d6298](https://github.com/kawafuchieirin/sample-app/commit/70d6298c0f43eb81a322021624302d5146a2ae21))
+* タスク管理アプリ(React+Lambda+DynamoDB)をTerraform/CI-CD付きで追加 ([9f55690](https://github.com/kawafuchieirin/sample-app/commit/9f55690fd60956dcfc94f0114fe360036701db1b))
+
 ## 1.0.0 (2026-07-04)
 
 
