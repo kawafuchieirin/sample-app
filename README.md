@@ -78,9 +78,18 @@ make tf-validate     # Terraform validate（local/prod）
 
 ### 事前準備（初回のみ）
 
-1. GitHub OIDC 用の IAM ロールを作成し、`main` からの引き受けを許可する。
+1. **GitHub OIDC のセットアップ**: [`infra/bootstrap`](./infra/bootstrap/) を apply し、
+   OIDC プロバイダとデプロイ用 IAM ロールを作成する（長期アクセスキー不要）。
+
+   ```bash
+   cd infra/bootstrap
+   terraform init && terraform apply
+   gh variable set AWS_DEPLOY_ROLE_ARN --repo kawafuchieirin/sample-app \
+     --body "$(terraform output -raw deploy_role_arn)"
+   ```
+
 2. リポジトリ設定の **Variables** に以下を登録:
-   - `AWS_DEPLOY_ROLE_ARN`: 上記 IAM ロールの ARN
+   - `AWS_DEPLOY_ROLE_ARN`: 上記 bootstrap 出力のロール ARN
    - `FRONTEND_BUCKET_NAME`: フロント配信用 S3 バケット名（グローバル一意）
 3. （推奨）Terraform ステートの S3 バックエンドを用意し、
    `infra/environments/prod/backend.tf.example` を有効化する。
