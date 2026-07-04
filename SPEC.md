@@ -46,13 +46,17 @@ sample-app/
 ├── frontend/                    # React + Vite + TS
 │   ├── src/
 │   └── package.json
-├── backend/                     # Python Lambda
+├── backend/                     # タスクCRUD API (Python Lambda)
 │   ├── src/task_api/
+│   └── tests/
+├── api/                         # タスク統計 API (Python Lambda)
+│   ├── src/stats_api/
 │   └── tests/
 ├── infra/                       # Terraform
 │   ├── modules/
 │   │   ├── database/            # DynamoDB
 │   │   ├── backend/             # Lambda + API Gateway + IAM
+│   │   ├── stats/               # 統計 Lambda + 既存 API へのルート追加
 │   │   └── frontend/            # S3 + CloudFront
 │   └── environments/
 │       ├── local/               # LocalStack 向け
@@ -83,8 +87,16 @@ DynamoDB テーブル `tasks`
 | GET      | `/tasks/{id}`  | 単一取得         | -                                        |
 | PUT      | `/tasks/{id}`  | 更新             | `{title?, description?, status?}`        |
 | DELETE   | `/tasks/{id}`  | 削除             | -                                        |
+| GET      | `/stats`       | タスク統計       | -                                        |
 
-レスポンスは JSON。CORS を有効化する。
+`/tasks` 系は `backend`(task_api)、`/stats` は `api`(stats_api) の別 Lambda が担当し、
+同一の HTTP API にルーティングする。レスポンスは JSON。CORS を有効化する。
+
+`/stats` のレスポンス例:
+
+```json
+{ "total": 3, "todo": 1, "in_progress": 1, "done": 1, "unknown": 0 }
+```
 
 ## 本番とローカルの差分最小化の方針
 

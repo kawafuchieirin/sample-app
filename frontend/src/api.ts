@@ -1,4 +1,4 @@
-import type { Task, TaskInput, TaskStatus } from "./types";
+import type { Task, TaskInput, TaskStats, TaskStatus } from "./types";
 
 // API のベース URL。ビルド時に VITE_API_URL で注入する。
 // 未設定時は同一オリジンの /api を利用する（CloudFront で API Gateway へルーティングする想定）。
@@ -34,4 +34,5 @@ export const tasksApi = {
   update: (id: string, input: Partial<TaskInput> & { status?: TaskStatus }) =>
     request<Task>(`/tasks/${id}`, { method: "PUT", body: JSON.stringify(input) }),
   remove: (id: string) => request<void>(`/tasks/${id}`, { method: "DELETE" }),
+  stats: () => request<TaskStats>("/stats"),
 };

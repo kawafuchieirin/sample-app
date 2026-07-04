@@ -33,7 +33,8 @@ make setup       # フロント/バックエンドの依存関係を導入
 
 ```
 frontend/   React + Vite + TS。src/api.ts が API 呼び出し、src/App.tsx が UI。
-backend/    Python Lambda。src/task_api/ に handler / models / repository。
+backend/    タスクCRUD API の Python Lambda。src/task_api/ に handler / models / repository。
+api/        タスク統計 API の Python Lambda。src/stats_api/ に handler / repository。
 infra/      Terraform。modules/ は prod/local 共通、environments/ が環境差分。
 scripts/    ローカル運用スクリプト（deploy-local.sh）。
 ```
@@ -71,7 +72,8 @@ VITE_API_URL=<LocalStack の API URL> pnpm dev
 ## テストと静的検査
 
 ```bash
-make test-backend    # pytest（moto で DynamoDB をモック。ネットワーク不要）
+make test-backend    # タスクCRUD API の pytest（moto で DynamoDB をモック。ネットワーク不要）
+make test-api        # 統計 API の pytest
 make lint-backend    # ruff
 make lint-frontend   # tsc --noEmit（型チェック）
 make build-frontend  # vite build

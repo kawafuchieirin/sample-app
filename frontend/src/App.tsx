@@ -1,15 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
 import { tasksApi } from "./api";
-import { STATUS_LABELS, type Task, type TaskStatus } from "./types";
+import { STATUS_LABELS, type Task, type TaskStats, type TaskStatus } from "./types";
 
 const STATUS_ORDER: TaskStatus[] = ["todo", "in_progress", "done"];
 
 export function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [stats, setStats] = useState<TaskStats | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // 統計 API (GET /stats) を取得する。失敗しても一覧表示は妨げない。
+  const refreshStats = useCallback(async () => {
+    try {
+      setStats(await tasksApi.stats());
+    } catch {
+      setStats(null);
+    }
+  }, []);
 
   const loadTasks = useCallback(async () => {
     setLoading(true);
@@ -26,7 +36,8 @@ export function App() {
 
   useEffect(() => {
     void loadTasks();
-  }, [loadTasks]);
+    void refreshStats();
+  }, [loadTasks, refreshStats]);
 
   const handleCreate = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -37,6 +48,7 @@ export function App() {
       setTasks((prev) => [...prev, created]);
       setTitle("");
       setDescription("");
+      void refreshStats();
     } catch (e) {
       setError(e instanceof Error ? e.message : "作成に失敗しました");
     }
@@ -47,6 +59,7 @@ export function App() {
     try {
       const updated = await tasksApi.update(task.id, { status });
       setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
+      void refreshStats();
     } catch (e) {
       setError(e instanceof Error ? e.message : "更新に失敗しました");
     }
@@ -57,6 +70,7 @@ export function App() {
     try {
       await tasksApi.remove(task.id);
       setTasks((prev) => prev.filter((t) => t.id !== task.id));
+      void refreshStats();
     } catch (e) {
       setError(e instanceof Error ? e.message : "削除に失敗しました");
     }
@@ -65,6 +79,23 @@ export function App() {
   return (
     <main className="container">
       <h1>タスク管理</h1>
+
+      {stats && (
+        <div className="stats" aria-label="タスク統計">
+          <span className="stats-item">
+            合計 <strong>{stats.total}</strong>
+          </span>
+          <span className="stats-item status-todo">
+            {STATUS_LABELS.todo} <strong>{stats.todo}</strong>
+          </span>
+          <span className="stats-item status-in_progress">
+            {STATUS_LABELS.in_progress} <strong>{stats.in_progress}</strong>
+          </span>
+          <span className="stats-item status-done">
+            {STATUS_LABELS.done} <strong>{stats.done}</strong>
+          </span>
+        </div>
+      )}
 
       <form className="task-form" onSubmit={handleCreate}>
         <input

@@ -1,11 +1,17 @@
 # API リファレンス
 
-タスク管理 API の詳細。実装は [backend/src/task_api/handler.py](../backend/src/task_api/handler.py)。
-高レベルな契約は [SPEC.md](../SPEC.md) を参照。
+タスク管理 API の詳細。高レベルな契約は [SPEC.md](../SPEC.md) を参照。
 
 - ベース URL: 環境ごとの API Gateway エンドポイント（`VITE_API_URL` に設定される値）
 - 形式: JSON（リクエスト/レスポンスとも）
 - CORS: すべてのオリジンを許可（`Access-Control-Allow-Origin: *`）
+
+2 つの Lambda が同一の HTTP API にルーティングされる。
+
+| リソース | 担当ディレクトリ | 実装 |
+| --- | --- | --- |
+| `/tasks` 系（CRUD） | `backend/` | [backend/src/task_api/handler.py](../backend/src/task_api/handler.py) |
+| `/stats`（統計） | `api/` | [api/src/stats_api/handler.py](../api/src/stats_api/handler.py) |
 
 ## タスクリソース
 
@@ -52,6 +58,18 @@
 
 - `204 No Content` → 削除成功
 - `404 Not Found` → 該当なし
+
+### `GET /stats` — タスク統計
+
+タスクをステータス別に集計して返す（`api/` の統計 Lambda が担当）。
+
+- `200 OK` →
+
+  ```json
+  { "total": 3, "todo": 1, "in_progress": 1, "done": 1, "unknown": 0 }
+  ```
+
+  `unknown` は既定 3 ステータス以外の値を集約したもの。
 
 ## エラーレスポンス
 

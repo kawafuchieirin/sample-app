@@ -8,6 +8,11 @@ output "api_id" {
   value       = aws_apigatewayv2_api.http.id
 }
 
+output "api_execution_arn" {
+  description = "API Gateway の execution ARN（他 Lambda のルート追加・権限付与に使用）"
+  value       = aws_apigatewayv2_api.http.execution_arn
+}
+
 output "api_endpoint" {
   description = "API のベース URL"
   value       = aws_apigatewayv2_stage.default.invoke_url
