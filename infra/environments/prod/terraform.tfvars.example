@@ -1,0 +1,5 @@
+# 本番用の変数値。コピーして terraform.tfvars を作成する。
+# frontend_bucket_name はグローバルで一意である必要がある。
+region               = "ap-northeast-1"
+project              = "taskapp"
+frontend_bucket_name = "taskapp-prod-frontend-CHANGE-ME"

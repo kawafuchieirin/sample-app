@@ -1,0 +1,10 @@
+[tools]
+node = "22"
+python = "3.13"
+terraform = "1.10"
+pnpm = "9"
+awscli = "2"
+
+[env]
+# LocalStack 向けのダミー認証情報（本物のクレデンシャルではない）
+AWS_DEFAULT_REGION = "ap-northeast-1"

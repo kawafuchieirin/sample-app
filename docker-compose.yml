@@ -1,0 +1,19 @@
+# LocalStack: AWS サービスをローカルの Docker でエミュレートする。
+# 本番と同じ Terraform 定義(infra/environments/local)をこの LocalStack に適用することで、
+# 本番(AWS)との構成差分を最小化する。
+services:
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:3
+    ports:
+      - "4566:4566" # すべての AWS サービスのエッジポート
+    environment:
+      # 利用するサービス（Community 版で対応しているもの）
+      - SERVICES=s3,dynamodb,lambda,apigateway,iam,sts,logs,cloudwatch
+      - DEBUG=0
+      # Lambda を Docker コンテナとして実行し、LocalStack と同一ネットワークに接続する。
+      # これにより Lambda 内の boto3 が http://localstack:4566 で各サービスへ到達できる。
+      - LAMBDA_DOCKER_NETWORK=sample-app_default
+    volumes:
+      - "./volume:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
