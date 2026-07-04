@@ -1,0 +1,50 @@
+# Node / Frontend
+node_modules/
+dist/
+*.local
+.vite/
+*.tsbuildinfo
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+build/
+*.egg-info/
+
+# Lambda build artifacts
+backend/dist/
+backend/*.zip
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+!*.tfvars.example
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl.bak
+
+# LocalStack
+.localstack/
+volume/
+
+# 環境変数・秘密情報
+.env
+.env.*
+!.env.example
+
+# OS / エディタ
+.DS_Store
+*.swp
+.idea/
+.vscode/

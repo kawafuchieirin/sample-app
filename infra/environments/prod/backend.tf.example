@@ -1,0 +1,13 @@
+# 本番のステートを S3 で共有管理する場合、このファイルを backend.tf にリネームして
+# 値を埋め、`terraform init -migrate-state` を実行する。
+# 事前に state 用の S3 バケットと DynamoDB ロックテーブルを用意すること。
+#
+# terraform {
+#   backend "s3" {
+#     bucket         = "taskapp-tfstate"
+#     key            = "prod/terraform.tfstate"
+#     region         = "ap-northeast-1"
+#     dynamodb_table = "taskapp-tflock"
+#     encrypt        = true
+#   }
+# }

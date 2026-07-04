@@ -1,0 +1,89 @@
+name: Deploy (prod)
+
+# main への push で本番(AWS)へデプロイする。
+# 認証は GitHub OIDC による IAM ロール引き受け（長期アクセスキーは保存しない）。
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # 手動実行も可能
+
+permissions:
+  id-token: write # OIDC トークン取得のため
+  contents: read
+
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+env:
+  AWS_REGION: ap-northeast-1
+  TF_DIR: infra/environments/prod
+
+jobs:
+  deploy:
+    name: Terraform apply + フロント配信
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: AWS 認証 (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Terraform をセットアップ
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.10.5"
+
+      - name: Node をセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: pnpm をセットアップ
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      # 1) インフラ適用（Lambda のソース zip も archive_file のハッシュ変化で自動更新される）
+      - name: Terraform apply
+        working-directory: ${{ env.TF_DIR }}
+        run: |
+          terraform init
+          terraform apply -auto-approve -input=false \
+            -var="frontend_bucket_name=${{ vars.FRONTEND_BUCKET_NAME }}"
+
+      # 2) デプロイ先の情報を Terraform 出力から取得
+      - name: Terraform 出力を取得
+        id: tf
+        working-directory: ${{ env.TF_DIR }}
+        run: |
+          {
+            echo "api_endpoint=$(terraform output -raw api_endpoint)"
+            echo "bucket=$(terraform output -raw frontend_bucket)"
+            echo "distribution_id=$(terraform output -raw cloudfront_distribution_id)"
+          } >> "$GITHUB_OUTPUT"
+
+      # 3) フロントを本番 API 向けにビルド
+      - name: フロントエンドをビルド
+        working-directory: frontend
+        env:
+          VITE_API_URL: ${{ steps.tf.outputs.api_endpoint }}
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      # 4) S3 へ同期し CloudFront のキャッシュを無効化
+      - name: S3 へ配信 + CloudFront 無効化
+        env:
+          BUCKET: ${{ steps.tf.outputs.bucket }}
+          DISTRIBUTION_ID: ${{ steps.tf.outputs.distribution_id }}
+        run: |
+          aws s3 sync frontend/dist "s3://${BUCKET}" --delete
+          aws cloudfront create-invalidation \
+            --distribution-id "${DISTRIBUTION_ID}" \
+            --paths "/*"
