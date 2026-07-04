@@ -11,7 +11,9 @@ React + AWS Lambda(Python) + DynamoDB によるシンプルなタスク管理ア
 ```
 ユーザー ─► CloudFront ─► S3 (React SPA)
                 │
-                └─► API Gateway (HTTP API) ─► Lambda (Python) ─► DynamoDB
+                │                         ┌─► Lambda: task_api (/tasks)  ─┐
+                └─► API Gateway (HTTP API)┤                              ├─► DynamoDB
+                                          └─► Lambda: stats_api (/stats) ─┘
 ```
 
 | レイヤ    | 技術                              |
@@ -28,7 +30,8 @@ React + AWS Lambda(Python) + DynamoDB によるシンプルなタスク管理ア
 
 ```
 frontend/   React + Vite + TS
-backend/    Python Lambda (src/task_api) + tests
+backend/    タスクCRUD API — Python Lambda (src/task_api) + tests
+api/        タスク統計 API — Python Lambda (src/stats_api) + tests
 infra/      Terraform (modules/ と environments/{local,prod})
 scripts/    ローカル運用スクリプト
 .github/    CI/CD ワークフロー
@@ -108,17 +111,21 @@ make tf-validate     # Terraform validate（local/prod）
 ## CI
 
 Pull Request で [.github/workflows/ci.yml](.github/workflows/ci.yml) が起動し、
-バックエンド（ruff + pytest）、フロント（型チェック + build）、Terraform（fmt + validate）を検証する。
+バックエンド・統計API（ruff + pytest）、フロント（型チェック + build）、Terraform（fmt + validate）を検証する。
 
 ## API 仕様
 
-| メソッド | パス          | 説明     |
-| -------- | ------------- | -------- |
-| GET      | `/tasks`      | 一覧取得 |
-| POST     | `/tasks`      | 作成     |
-| GET      | `/tasks/{id}` | 単一取得 |
-| PUT      | `/tasks/{id}` | 更新     |
-| DELETE   | `/tasks/{id}` | 削除     |
+| メソッド | パス          | 説明                              |
+| -------- | ------------- | --------------------------------- |
+| GET      | `/tasks`      | 一覧取得                          |
+| POST     | `/tasks`      | 作成                              |
+| GET      | `/tasks/{id}` | 単一取得                          |
+| PUT      | `/tasks/{id}` | 更新                              |
+| DELETE   | `/tasks/{id}` | 削除                              |
+| GET      | `/stats`      | タスク統計（ステータス別件数）    |
+
+`/tasks` は `backend/`、`/stats` は `api/` の別 Lambda が処理し、同一の HTTP API に
+ルーティングされる（フロントからは同じベース URL で呼べる）。
 
 ## 本番とローカルの差分最小化
 

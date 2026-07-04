@@ -20,3 +20,11 @@ export const STATUS_LABELS: Record<TaskStatus, string> = {
   in_progress: "進行中",
   done: "完了",
 };
+
+export interface TaskStats {
+  total: number;
+  todo: number;
+  in_progress: number;
+  done: number;
+  unknown: number;
+}

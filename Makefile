@@ -7,6 +7,7 @@ setup: ## ランタイムと依存関係をインストール
 	mise install
 	cd frontend && corepack pnpm install
 	cd backend && python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
+	cd api && python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]"
 
 local-up: ## LocalStack を起動
 	docker compose up -d
@@ -23,13 +24,19 @@ local-logs: ## LocalStack のログを表示
 local-deploy: ## LocalStack へインフラ+フロントをデプロイ
 	./scripts/deploy-local.sh
 
-test: test-backend ## すべてのテストを実行
+test: test-backend test-api ## すべてのテストを実行
 
 test-backend: ## バックエンドのテスト (pytest)
 	cd backend && . .venv/bin/activate && pytest -q
 
+test-api: ## 統計API のテスト (pytest)
+	cd api && . .venv/bin/activate && pytest -q
+
 lint-backend: ## バックエンドの Lint (ruff)
 	cd backend && . .venv/bin/activate && ruff check src tests
+
+lint-api: ## 統計API の Lint (ruff)
+	cd api && . .venv/bin/activate && ruff check src tests
 
 build-frontend: ## フロントエンドのビルド
 	cd frontend && corepack pnpm build

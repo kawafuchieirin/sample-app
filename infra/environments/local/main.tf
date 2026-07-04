@@ -27,6 +27,18 @@ module "backend" {
   tags         = local.tags
 }
 
+module "stats" {
+  source            = "../../modules/stats"
+  name_prefix       = local.name_prefix
+  source_dir        = "${path.module}/../../../api/src"
+  table_name        = module.database.table_name
+  table_arn         = module.database.table_arn
+  api_id            = module.backend.api_id
+  api_execution_arn = module.backend.api_execution_arn
+  endpoint_url      = "http://localstack:4566"
+  tags              = local.tags
+}
+
 module "frontend" {
   source            = "../../modules/frontend"
   bucket_name       = "${local.name_prefix}-frontend"
