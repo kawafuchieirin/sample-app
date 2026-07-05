@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.1](https://github.com/kawafuchieirin/sample-app/compare/v1.4.0...v1.4.1) (2026-07-05)
+
+
+### Bug Fixes
+
+* **frontend:** AI アシスタントパネルを opt-in 化し本番の壊れた接続表示を解消 ([88ad0ae](https://github.com/kawafuchieirin/sample-app/commit/88ad0aef5e669a7f16de6372d1db02f61e8f43d9))
+* **frontend:** AI パネルを opt-in 化し本番の壊れた接続表示を解消 ([466fd84](https://github.com/kawafuchieirin/sample-app/commit/466fd8495c1cb136b6598033372c05e15415973c))
+
 ## [1.4.0](https://github.com/kawafuchieirin/sample-app/compare/v1.3.0...v1.4.0) (2026-07-05)
 
 
