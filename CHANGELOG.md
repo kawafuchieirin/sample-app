@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/kawafuchieirin/sample-app/compare/v1.2.0...v1.3.0) (2026-07-05)
+
+
+### Features
+
+* prod の Terraform ステートを S3 リモートバックエンド化 ([1e2fda5](https://github.com/kawafuchieirin/sample-app/commit/1e2fda5e20399a7e36881de498426e66bf1cd558))
+* prod の Terraform ステートを S3 リモートバックエンド化 ([d0ff054](https://github.com/kawafuchieirin/sample-app/commit/d0ff0549929632e0b9b53d21d30573b6ead24435))
+
 ## [1.2.0](https://github.com/kawafuchieirin/sample-app/compare/v1.1.0...v1.2.0) (2026-07-04)
 
 
