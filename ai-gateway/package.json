@@ -1,0 +1,30 @@
+{
+  "name": "ai-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Codex app-server とブラウザを仲介する常駐ゲートウェイ (AI タスクアシスタント)",
+  "scripts": {
+    "gen:types": "codex app-server generate-ts --out src/generated",
+    "start": "tsx src/server.ts",
+    "dev": "tsx watch src/server.ts",
+    "smoke": "tsx src/smoke.ts",
+    "smoke:mcp": "tsx src/smokeMcp.ts",
+    "smoke:ws": "tsx src/smokeWs.ts",
+    "chat": "tsx src/chat.ts",
+    "test": "vitest run",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/ws": "^8.18.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1",
+    "ws": "8",
+    "zod": "3"
+  }
+}

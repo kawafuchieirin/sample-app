@@ -1,0 +1,3 @@
+# Codex app-server から生成した型。手動編集せず `make codex-schema` で再生成する。
+# diff を折りたたむため generated 扱いにする。
+src/generated/** linguist-generated=true
