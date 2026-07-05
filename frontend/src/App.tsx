@@ -1,9 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useState } from "react";
 import { tasksApi } from "./api";
 import { STATUS_LABELS, type Task, type TaskStats, type TaskStatus } from "./types";
-import { AssistantPanel } from "./ai/AssistantPanel";
+
+// AI パネルは opt-in 時のみ読み込む別チャンクにし、本番バンドルへ載せない。
+const AssistantPanel = lazy(() =>
+  import("./ai/AssistantPanel").then((m) => ({ default: m.AssistantPanel })),
+);
 
 const STATUS_ORDER: TaskStatus[] = ["todo", "in_progress", "done"];
+
+// AI アシスタントは ai-gateway(常駐プロセス)が必要で、設計上 AWS には載らない。
+// そのため VITE_AI_WS_URL が明示的に設定されている時だけパネルを表示する。
+// 本番ビルドでは未設定なので非表示になり、ゲートウェイのないローカルアドレスへ
+// 延々と再接続を試みる壊れた UI を本番に出さない。
+const AI_ASSISTANT_ENABLED = Boolean(import.meta.env.VITE_AI_WS_URL);
 
 export function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -158,7 +168,11 @@ export function App() {
         </ul>
       )}
 
-      <AssistantPanel onTasksMayHaveChanged={refreshAll} />
+      {AI_ASSISTANT_ENABLED && (
+        <Suspense fallback={null}>
+          <AssistantPanel onTasksMayHaveChanged={refreshAll} />
+        </Suspense>
+      )}
     </main>
   );
 }
