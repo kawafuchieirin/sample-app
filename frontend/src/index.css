@@ -158,3 +158,165 @@ button:disabled {
 .task-actions button {
   background: #ef4444;
 }
+
+/* --- AI アシスタントパネル --- */
+.ai-panel {
+  margin-top: 2rem;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.ai-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  background: #111827;
+  color: #fff;
+}
+
+.ai-title {
+  font-weight: 600;
+}
+
+.ai-status {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.ai-status-ready {
+  color: #6ee7b7;
+}
+
+.ai-status-closed {
+  color: #fca5a5;
+}
+
+.ai-log {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 360px;
+  overflow-y: auto;
+}
+
+.ai-hint {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.ai-msg {
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 85%;
+}
+
+.ai-msg-user {
+  align-self: flex-end;
+  background: #2563eb;
+  color: #fff;
+}
+
+.ai-msg-assistant {
+  align-self: flex-start;
+  background: #f3f4f6;
+  color: #1a1a1a;
+}
+
+.ai-msg-system {
+  align-self: center;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.8rem;
+  padding: 0.15rem 0.5rem;
+}
+
+.ai-typing {
+  opacity: 0.6;
+}
+
+.ai-error {
+  color: #b91c1c;
+  background: #fee2e2;
+  margin: 0 1rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.ai-input {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.ai-input input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+/* 承認ダイアログ */
+.ai-approval-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.ai-approval {
+  background: #fff;
+  border-radius: 12px;
+  padding: 1.25rem;
+  width: min(420px, 90vw);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+}
+
+.ai-approval-title {
+  font-weight: 700;
+  margin: 0 0 0.5rem;
+}
+
+.ai-approval-tool {
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.ai-approval-params {
+  background: #f3f4f6;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  overflow-x: auto;
+  margin: 0 0 1rem;
+}
+
+.ai-approval-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.ai-btn-deny {
+  background: #e5e7eb;
+  color: #1a1a1a;
+}
+
+.ai-btn-approve {
+  background: #dc2626;
+}

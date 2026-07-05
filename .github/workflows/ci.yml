@@ -86,6 +86,37 @@ jobs:
         working-directory: frontend
         run: pnpm build
 
+  ai-gateway:
+    name: AI Gateway (lint + test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: pnpm をセットアップ
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Node をセットアップ
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: ai-gateway/pnpm-lock.yaml
+
+      - name: 依存関係をインストール
+        working-directory: ai-gateway
+        run: pnpm install --frozen-lockfile
+
+      # 生成型 (src/generated) はコミット済み。Codex は不要（テストは fake/mock で決定的）。
+      - name: 型チェック
+        working-directory: ai-gateway
+        run: pnpm lint
+
+      - name: Test (vitest)
+        working-directory: ai-gateway
+        run: pnpm test
+
   terraform:
     name: Terraform (fmt + validate)
     runs-on: ubuntu-latest

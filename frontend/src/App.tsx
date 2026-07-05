@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { tasksApi } from "./api";
 import { STATUS_LABELS, type Task, type TaskStats, type TaskStatus } from "./types";
+import { AssistantPanel } from "./ai/AssistantPanel";
 
 const STATUS_ORDER: TaskStatus[] = ["todo", "in_progress", "done"];
 
@@ -35,6 +36,12 @@ export function App() {
   }, []);
 
   useEffect(() => {
+    void loadTasks();
+    void refreshStats();
+  }, [loadTasks, refreshStats]);
+
+  // AI アシスタントがタスクを変更した後に一覧・統計を再取得する。
+  const refreshAll = useCallback(() => {
     void loadTasks();
     void refreshStats();
   }, [loadTasks, refreshStats]);
@@ -150,6 +157,8 @@ export function App() {
           ))}
         </ul>
       )}
+
+      <AssistantPanel onTasksMayHaveChanged={refreshAll} />
     </main>
   );
 }

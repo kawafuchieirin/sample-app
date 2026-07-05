@@ -32,7 +32,39 @@ React + AWS Lambda(Python) + DynamoDB によるシンプルなタスク管理ア
 | [docs/development.md](./docs/development.md) | 開発ガイド（セットアップ・ローカル実行・テスト） |
 | [docs/deployment.md](./docs/deployment.md) | デプロイ / CI・CD ガイド（OIDC・運用・既知の課題） |
 | [docs/api.md](./docs/api.md) | API リファレンス |
+| [docs/ai-assist-spec.md](./docs/ai-assist-spec.md) | AI タスクアシスタント設計（Codex app-server 連携） |
+| [ai-gateway/README.md](./ai-gateway/README.md) | AI アシスタントのゲートウェイ（起動・開発） |
 | [infra/bootstrap/README.md](./infra/bootstrap/README.md) | OIDC 認証基盤のセットアップ |
+
+## AI タスクアシスタント（任意機能）
+
+自然言語でタスクを操作できる AI アシスタントを組み込んでいる（`ai-gateway/`）。Codex CLI の
+app-server を JSON-RPC で常駐ゲートウェイから呼び、MCP 経由で `/tasks` API を操作する。
+削除など破壊的操作は UI 上の承認を挟む。**ローカル単一運用者向け**（Codex 認証は OS ユーザー単位）。
+
+ローカルは 3 つを別ターミナルで起動する（詳細は下記「ローカル API について」）:
+
+```bash
+make local-up      # 1) LocalStack(DynamoDB)
+make local-api     # 2) タスク API(dev サーバ) → http://localhost:8788
+make ai-up         # 3) AI ゲートウェイ(要 codex login) → ws://127.0.0.1:8787
+
+# フロント（画面下部に AI パネルが出る）。dev では環境変数なしで OK：
+#   /api は Vite が local-api(8788) へプロキシ、AI は既定で ws://127.0.0.1:8787 に接続。
+cd frontend && pnpm dev
+```
+
+Codex を起動せず対話だけ試すなら `make ai-gateway-chat`。詳細は
+[ai-gateway/README.md](./ai-gateway/README.md) と [設計書](./docs/ai-assist-spec.md)。
+
+### ローカル API について（LocalStack Community の制約）
+
+本アプリの API は **API Gateway v2(HTTP API)** と **Lambda(python3.13)** を使うが、いずれも
+**LocalStack Community では動かない**（apigatewayv2 は Pro 機能、Lambda は python3.12 まで）。
+そのためローカルでは、本番と同じ Python ハンドラ（`task_api`/`stats_api`）を**そのまま再利用**する
+軽量 HTTP サーバ `make local-api`（`scripts/local_api_server.py`）で `/tasks`・`/stats` を提供する。
+DynamoDB は LocalStack のものを使い、データは永続する。本番(AWS)は従来どおり Terraform で
+API Gateway + Lambda をデプロイする（`make local-deploy` の API 部分は Pro が必要）。
 
 ## ディレクトリ構成
 
