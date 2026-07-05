@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.0](https://github.com/kawafuchieirin/sample-app/compare/v1.3.0...v1.4.0) (2026-07-05)
+
+
+### Features
+
+* AI タスクアシスタント (Codex app-server ベース) を追加 ([90c85a2](https://github.com/kawafuchieirin/sample-app/commit/90c85a2bdd570646730f97310b4d7cd0768b7d6c))
+* Codex app-server ベースの AI ゲートウェイを追加 ([aed1463](https://github.com/kawafuchieirin/sample-app/commit/aed1463a85b3901c99e0f31f3118b0c7c323600c))
+* タスク一覧に AI アシスタントパネルを統合 ([3564ea5](https://github.com/kawafuchieirin/sample-app/commit/3564ea532428545f993c870df29c0c5a67e28d28))
+* ローカル API サーバと ai-gateway 起動スクリプトを追加 ([5eccc2c](https://github.com/kawafuchieirin/sample-app/commit/5eccc2c8c6fff3a5cd36a435765586331d38ce40))
+
 ## [1.3.0](https://github.com/kawafuchieirin/sample-app/compare/v1.2.0...v1.3.0) (2026-07-05)
 
 
