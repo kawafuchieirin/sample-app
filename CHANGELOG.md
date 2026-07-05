@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/kawafuchieirin/sample-app/compare/v1.1.0...v1.2.0) (2026-07-04)
+
+
+### Features
+
+* タスク統計API (GET /stats) を api/ に追加 ([6805564](https://github.com/kawafuchieirin/sample-app/commit/6805564e7c4eccd6d60deb753734456aef0453ef))
+
 ## [1.1.0](https://github.com/kawafuchieirin/sample-app/compare/v1.0.0...v1.1.0) (2026-07-04)
 
 
